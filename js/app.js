@@ -13,18 +13,7 @@ let box = new THREE.Mesh( geometry, material );
 box.position.y = -2
 
 scene.add(box)
-let geometry1 = new THREE.BoxGeometry(1, 1,1 );
-let material1 = new THREE.MeshNormalMaterial();
-let box1 = new THREE.Mesh( geometry1, material1 );
-box1.position.x = 5
 
-scene.add(box1)
-let geometry2 = new THREE.BoxGeometry(1, 1,1 );
-let material2 = new THREE.MeshNormalMaterial();
-let box2 = new THREE.Mesh( geometry2, material2 );
-box2.position.x = -5
-
-scene.add(box2)
 
 camera.position.z = 5;
 
@@ -35,24 +24,10 @@ scene.add(light)
 let animate = function () {
     requestAnimationFrame( animate );
 
-    box.rotation.x += 0.02
-    box.rotation.y += 0.02
+    box.rotation.x += 0.01
+    box.rotation.y += 0.01
     box.position.y += 0.01
     box.position.z += 0.01
-
-    box1.rotation.x += 0.02
-    box1.rotation.y += 0.02
-    box1.position.y += 0.01
-    box1.position.z += 0.01
-
-    box2.rotation.x += 0.02
-    box2.rotation.y += 0.02
-    box2.position.y += 0.01
-    box2.position.z += 0.01
-
-
-
-
     renderer.render( scene, camera );
 };
 
