@@ -7,11 +7,10 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
 
-let geometry = new THREE.BoxGeometry(1, 1,1 );
-let material = new THREE.MeshNormalMaterial()
+let geometry = new THREE.BoxGeometry(2, 2,2 );
+let material = new THREE.MeshPhysicalMaterial({color: "#ffc9cb" })
 let box = new THREE.Mesh( geometry, material );
 box.position.y = -2
-
 scene.add(box)
 
 
