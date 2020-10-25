@@ -1,33 +1,80 @@
-let scene = new THREE.Scene();
-let camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+let scene, camera, renderer, mesh
+let meshFloor
+let keyboard = {}
 
-let renderer = new THREE.WebGLRenderer({antialias:true});
-renderer.setClearColor("#ABE6FF")
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
+let player = {
+    height: 1.8,
+    speed: 0.1,
+    turnSpeed: Math.PI * 0.01
+}
+function init() {
+    scene = new THREE.Scene()
+    camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 0.1, 1000)
+    mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(1,1,1),
+        new THREE.MeshBasicMaterial({color: 0xff9999, wireframe: false})
+    )
+    scene.add(mesh)
+    mesh.position.y += 1
+
+    meshFloor = new THREE.Mesh(
+        new THREE.PlaneGeometry(10,10, 10, 10),
+        new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: false})
+    )
+    meshFloor.rotation.x -= Math.PI / 2
+    scene.add(meshFloor)
+    camera.position.set(0,player.height,-5)
+    camera.lookAt(new THREE.Vector3(0,player.height,0))
+    renderer = new THREE.WebGLRenderer()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    document.body.appendChild(renderer.domElement)
+
+    animate()
+}
 
 
-let geometry = new THREE.BoxGeometry(2, 2,2 );
-let material = new THREE.MeshPhysicalMaterial({color: "#ffc9cb" })
-let box = new THREE.Mesh( geometry, material );
-box.position.y = -2
-scene.add(box)
+function animate() {
+    requestAnimationFrame(animate)
+
+    mesh.rotation.x += 0.01
+    mesh.rotation.y += 0.02
+
+    if (keyboard[87]) { // w - moving forward
+        camera.position.x -= Math.sin(camera.rotation.y) * player.speed
+        camera.position.z -= -Math.cos(camera.rotation.y) * player.speed
+    }
+    if (keyboard[83]) { // s - moving forward
+        camera.position.x += Math.sin(camera.rotation.y) * player.speed
+        camera.position.z += -Math.cos(camera.rotation.y) * player.speed
+    }
+    if (keyboard[65]) { // a - moving left
+        camera.position.x += Math.sin(camera.rotation.y + Math.PI/2) * player.speed
+        camera.position.z += -Math.cos(camera.rotation.y + Math.PI/2) * player.speed
+    }
+    if (keyboard[68]) { // d - moving right
+        camera.position.x += Math.sin(camera.rotation.y - Math.PI/2) * player.speed
+        camera.position.z += -Math.cos(camera.rotation.y - Math.PI/2) * player.speed
+    }
 
 
-camera.position.z = 5;
+    if(keyboard[37]) {  // left key
+        camera.rotation.y -= player.turnSpeed
+    }
+    if(keyboard[39]) {  // right key
+        camera.rotation.y += player.turnSpeed
+    }
+    renderer.render(scene, camera)
+}
 
-let light = new THREE.PointLight("#ffffff", 1, 500)
-light.position.set(10,2, 25)
-scene.add(light)
+function keyDown(event) {
+    keyboard[event.keyCode] = true
 
-let animate = function () {
-    requestAnimationFrame( animate );
+}
+function keyUp(event) {
+    keyboard[event.keyCode] = false
+}
 
-    box.rotation.x += 0.01
-    box.rotation.y += 0.01
-    box.position.y += 0.01
-    box.position.z += 0.01
-    renderer.render( scene, camera );
-};
+window.addEventListener('keydown', keyDown)
+window.addEventListener('keyup', keyUp)
 
-animate();
+window.onload = init
