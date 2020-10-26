@@ -22,7 +22,7 @@ function init() {
     scene.add(mesh)
 
     meshFloor = new THREE.Mesh(
-        new THREE.PlaneGeometry(10,10, 10, 10),
+        new THREE.PlaneGeometry(30,30, 10, 10),
         new THREE.MeshPhongMaterial({color: 0xffffff, wireframe: useWarFrame})
     )
     meshFloor.rotation.x -= Math.PI / 2
@@ -39,11 +39,18 @@ function init() {
     light.shadow.camera.far = 25
     scene.add(light)
 
+    let textureLoader = new THREE.TextureLoader()
+    crateTexture = textureLoader.load('crate0/crate0_diffuse.png')
     crate = new THREE.Mesh(
         new THREE.BoxGeometry(3,3,3),
-        new THREE.MeshPhongMaterial({color: 0xffffff}),
+        new THREE.MeshPhongMaterial({
+            color: 0xffffff,
+            map: crateTexture
+        }),
     )
     crate.position.set(3, 3/2, 2.5)
+    crate.receiveShadow = true
+    crate.castShadow = true
     scene.add(crate)
     camera.position.set(0,player.height,-5)
     camera.lookAt(new THREE.Vector3(0,player.height,0))
@@ -63,6 +70,7 @@ function animate() {
 
     mesh.rotation.x += 0.01
     mesh.rotation.y += 0.02
+
 
     if (keyboard[87]) { // w - moving forward
         camera.position.x -= Math.sin(camera.rotation.y) * player.speed
