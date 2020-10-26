@@ -41,11 +41,15 @@ function init() {
 
     let textureLoader = new THREE.TextureLoader()
     crateTexture = textureLoader.load('crate0/crate0_diffuse.png')
+    crateBumpMap = textureLoader.load('crate0/crate0_bump.png')
+    crateNormalMap = textureLoader.load('crate0/crate0_normal.png')
     crate = new THREE.Mesh(
         new THREE.BoxGeometry(3,3,3),
         new THREE.MeshPhongMaterial({
             color: 0xffffff,
-            map: crateTexture
+            map: crateTexture,
+            bumpMap: crateBumpMap,
+            normalMap: crateNormalMap
         }),
     )
     crate.position.set(3, 3/2, 2.5)
@@ -71,7 +75,7 @@ function animate() {
     mesh.rotation.x += 0.01
     mesh.rotation.y += 0.02
 
-
+    crate.rotation.y += 0.01
     if (keyboard[87]) { // w - moving forward
         camera.position.x -= Math.sin(camera.rotation.y) * player.speed
         camera.position.z -= -Math.cos(camera.rotation.y) * player.speed
