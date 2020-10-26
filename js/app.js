@@ -1,27 +1,32 @@
 let scene, camera, renderer, mesh, ambientLight, light
 let meshFloor
 let keyboard = {}
-
+let useWarFrame = false
 let player = {
     height: 1.8,
     speed: 0.1,
     turnSpeed: Math.PI * 0.01
 }
+
+let crate, crateTexture, crateNormalMap, crateBumpMap
 function init() {
     scene = new THREE.Scene()
     camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 0.1, 1000)
     mesh = new THREE.Mesh(
         new THREE.BoxGeometry(1,1,1),
-        new THREE.MeshPhongMaterial({color: 0xff9999, wireframe: false})
+        new THREE.MeshPhongMaterial({color: 0xff9999, wireframe: useWarFrame})
     )
-    scene.add(mesh)
     mesh.position.y += 1
+    mesh.receiveShadow = true
+    mesh.castShadow = true
+    scene.add(mesh)
 
     meshFloor = new THREE.Mesh(
         new THREE.PlaneGeometry(10,10, 10, 10),
-        new THREE.MeshPhongMaterial({color: 0xffffff, wireframe: false})
+        new THREE.MeshPhongMaterial({color: 0xffffff, wireframe: useWarFrame})
     )
     meshFloor.rotation.x -= Math.PI / 2
+    meshFloor.receiveShadow = true
     scene.add(meshFloor)
 
     ambientLight = new THREE.AmbientLight(0xffffff, 0.2)
@@ -34,6 +39,12 @@ function init() {
     light.shadow.camera.far = 25
     scene.add(light)
 
+    crate = new THREE.Mesh(
+        new THREE.BoxGeometry(3,3,3),
+        new THREE.MeshPhongMaterial({color: 0xffffff}),
+    )
+    crate.position.set(3, 3/2, 2.5)
+    scene.add(crate)
     camera.position.set(0,player.height,-5)
     camera.lookAt(new THREE.Vector3(0,player.height,0))
 
